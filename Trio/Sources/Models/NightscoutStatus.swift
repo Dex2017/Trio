@@ -13,6 +13,8 @@ struct OpenAPSStatus: JSON {
     let enacted: Determination?
     let version: String
     let recommendedBolus: Decimal?
+    /// Raw value, not the localized name: followers parse this.
+    let dosingMode: String
 }
 
 struct NSPumpStatus: JSON {
@@ -61,6 +63,8 @@ struct NightscoutProfileStore: JSON {
     let overridePresets: [NightscoutPresetOverride]?
     let teamID: String
     let expirationDate: Date?
+    /// Remote command types this build accepts; followers hide unsupported actions.
+    let remoteCommands: [String]?
 }
 
 struct NightscoutPresetOverride: JSON {
