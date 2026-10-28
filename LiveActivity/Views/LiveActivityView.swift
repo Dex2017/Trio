@@ -14,21 +14,7 @@ struct LiveActivityView: View {
     }
 
     private var glucoseColor: Color {
-        let state = context.state
-        let isMgdL = state.unit == "mg/dL"
-
-        // TODO: workaround for now: set low value to 55, to have dynamic color shades between 55 and user-set low (approx. 70); same for high glucose
-        let hardCodedLow = isMgdL ? Decimal(55) : 55.asMmolL
-        let hardCodedHigh = isMgdL ? Decimal(220) : 220.asMmolL
-
-        return Color.getDynamicGlucoseColor(
-            glucoseValue: Decimal(string: state.bg) ?? 100,
-            highGlucoseColorValue: !hasStaticColorScheme ? hardCodedHigh :
-                (isMgdL ? state.highGlucose : state.highGlucose.asMmolL),
-            lowGlucoseColorValue: !hasStaticColorScheme ? hardCodedLow : (isMgdL ? state.lowGlucose : state.lowGlucose.asMmolL),
-            targetGlucose: isMgdL ? state.target : state.target.asMmolL,
-            glucoseColorScheme: state.glucoseColorScheme
-        )
+        context.state.glucoseColor
     }
 
     var body: some View {
@@ -278,7 +264,9 @@ struct LiveActivityCompactLeadingView: View {
     var glucoseColor: Color
 
     var body: some View {
-        LiveActivityBGAndTrendView(context: context, size: .compact, glucoseColor: glucoseColor).padding(.leading, 4)
+        LiveActivityBGAndTrendView(context: context, size: .compact, glucoseColor: glucoseColor)
+            .lineLimit(1)
+            .minimumScaleFactor(0.5)
     }
 }
 
@@ -288,6 +276,8 @@ struct LiveActivityCompactTrailingView: View {
 
     var body: some View {
         LiveActivityGlucoseDeltaLabelView(context: context, glucoseColor: glucoseColor).padding(.trailing, 4)
+            .lineLimit(1)
+            .minimumScaleFactor(0.5)
     }
 }
 
